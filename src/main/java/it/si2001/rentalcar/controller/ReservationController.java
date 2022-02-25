@@ -174,7 +174,7 @@ public class ReservationController {
      *  return a ResponseEntity with the id of the reservation deleted in the body, or with the Exception error
      * */
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteReservation(@Valid @PathVariable("id") int id)
+    public ResponseEntity<?> deleteReservation(@PathVariable("id") int id)
     {
         log.debug("Rest request to delete a reservation");
 
@@ -228,6 +228,20 @@ public class ReservationController {
             //control if the reservation is not active
             if(reservationService.isActive(reservation.getId(), new Date()))
             {
+                //control if the vehicle has change
+                if(!temp.getVehicle().getPlate().equals(reservation.getVehicle().getPlate()))
+                {
+                    //set the availability
+                    temp.getVehicle().setAvailability((byte) 1);
+
+                    Vehicle vehicleRes = vehicleService.vehicleByPlate(reservation.getVehicle().getPlate());
+                   vehicleRes.setAvailability((byte) 0);
+
+                    System.out.println(temp.getVehicle().getModel()+"\n\n\n\n\n"+reservation.getVehicle().getModel());
+                    vehicleService.updateVehicle(temp.getVehicle());
+                    vehicleService.updateVehicle(vehicleRes);
+                }
+
                 //update the reservation
                 reservationService.updateReservation(reservation);
 
@@ -295,7 +309,7 @@ public class ReservationController {
     @GetMapping("/listByVehicle/{plate}")
     public ResponseEntity<?> reservationVehicle(@PathVariable("plate") String plate)
     {
-        //reservation is not active
+
         List<Reservation> result;
 
         Vehicle vehicle = vehicleService.vehicleByPlate(plate);

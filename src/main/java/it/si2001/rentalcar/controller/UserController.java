@@ -269,9 +269,14 @@ public class UserController {
                 account.setPassword(psw);
             }
 
-            //check if exists an account with the username
-            boolean exists = accountService.existsAccount(user.getAccount().getUsername());
+            boolean exists = false;
 
+            //control if the user has changed the username
+            if(!user.getAccount().getUsername().equals(account.getUsername()))
+            {
+                //check if exists an account with the username
+                exists = accountService.existsAccount(user.getAccount().getUsername());
+            }
 
             if(exists)
             { System.out.println(exists+"\n\n\n\n\n\n\n\n\n"+user.getAccount().getUsername()+"\n\n\n\n\n\n\n");

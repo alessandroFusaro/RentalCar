@@ -138,7 +138,7 @@ public class VehicleController {
             //control if there are reservation with this vehicle
             if(reservationService.existsReservationByVehicle(vehicleService.vehicleByPlate(plate)))
             {
-                return ResponseEntity.ok().body("Impossibile eliminare il veicolo\nCi sono delle prenotazioni con questo veicolo");
+                return ResponseEntity.ok().body("Impossibile eliminare il veicolo.\nCi sono delle prenotazioni con questo veicolo");
             }
 
             //delete the reservation expired with this vehicle
