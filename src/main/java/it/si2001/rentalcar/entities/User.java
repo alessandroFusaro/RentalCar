@@ -2,6 +2,7 @@ package it.si2001.rentalcar.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import it.si2001.rentalcar.validator.CodiceFiscale;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -41,6 +42,11 @@ public class User {
 
     @Column(name = "iban")
     private String iban;
+
+
+    @Column(name = "cf")
+    @CodiceFiscale()
+    private String cf;
 
     public int getId() {
         return id;
@@ -131,4 +137,11 @@ public class User {
     }
 
 
+    public String getCf() {
+        return cf;
+    }
+
+    public void setCf(String cf) {
+        this.cf = cf;
+    }
 }
