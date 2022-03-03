@@ -1,12 +1,17 @@
 package it.si2001.rentalcar.controller;
 
+import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import it.si2001.rentalcar.entities.Tipology;
+import it.si2001.rentalcar.entities.Vehicle;
 import it.si2001.rentalcar.service.TipologyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -16,6 +21,7 @@ import java.util.List;
  *
  */
 
+@OpenAPIDefinition(info = @Info(title = "Rest controller to managing the typology operations"))
 @RestController
 @RequestMapping(value = "/tipology")
 public class TipologyController {
@@ -29,6 +35,11 @@ public class TipologyController {
     *  return a ResponseEntity with the list of tipologies in the body, or with the exception error
     *
     * */
+    @ApiOperation(value = "Ttpology list",notes = "List of all typologies",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of typologies"),
+            @ApiResponse(code = 400, message = "Error get list"),
+    })
     @GetMapping("/list")
     public ResponseEntity<?> listTypologies(){
 
@@ -57,8 +68,13 @@ public class TipologyController {
      *  return a ResponseEntity with the data of the tipology in the body, or with the exception error
      *
      * */
+    @ApiOperation(value = "Typology data",notes = "Get the data of the typology",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Typology data"),
+            @ApiResponse(code = 400, message = "Error get typology data"),
+    })
     @GetMapping("/data/{id}")
-    public ResponseEntity<?> tipologyData(@Valid @PathVariable("id") int id){
+    public ResponseEntity<?> tipologyData(@ApiParam(name = "id",value = "Typology id",required = true) @Valid @PathVariable("id") int id){
 
         log.debug("Rest request to get the data of tipology");
 

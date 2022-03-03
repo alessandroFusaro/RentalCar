@@ -2,7 +2,15 @@ package it.si2001.rentalcar.controller;
 
 import com.nimbusds.jose.Header;
 import com.sun.net.httpserver.Headers;
+
+import io.swagger.annotations.*;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
 import it.si2001.rentalcar.entities.Account;
+import it.si2001.rentalcar.entities.Reservation;
 import it.si2001.rentalcar.entities.User;
 import it.si2001.rentalcar.models.AuthenticationRequest;
 import it.si2001.rentalcar.models.AuthenticationResponse;
@@ -21,6 +29,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,6 +39,7 @@ import java.util.List;
  * Rest controller for managing user operations
  *
  */
+@OpenAPIDefinition(info = @Info(title = "Rest controller to managing user operations"))
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
@@ -60,8 +71,13 @@ public class UserController {
     *
     *   return a response entity with the generated token in the body, or with the message error
     * */
+    @ApiOperation(value = "Login user", notes = "Login user with an username and password",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Login successfull"),
+            @ApiResponse(code = 400, message = "Wrong username or password"),
+    })
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception
+    public ResponseEntity<?> createAuthenticationToken(@ApiParam(name = "Authentication request",value = "Username and password") @RequestBody AuthenticationRequest authenticationRequest) throws Exception
     {
         //log message
         log.debug("REST request to get token jwt");
@@ -104,6 +120,11 @@ public class UserController {
     * return a ResponseEntity with a list of user in the body, or with the exception error
     *
     * */
+    @ApiOperation(value = "List of user", notes = "Get a list of all user tha have a user role",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User list"),
+            @ApiResponse(code = 400, message = "Error get user list"),
+    })
     @GetMapping("/list")
     public ResponseEntity<?> userList()
     {
@@ -129,6 +150,11 @@ public class UserController {
     *
     * */
 
+    @ApiOperation(value = "User Data", notes = "Get the data of the logged user",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User data"),
+            @ApiResponse(code = 400, message = "Error get user data"),
+    })
     @GetMapping("/data")
     public ResponseEntity<?> UserData()
     {
@@ -160,8 +186,13 @@ public class UserController {
     *
     *  Return a ResponseEntity with the user data added in the body, or with the exception error
     * */
+    @ApiOperation(value = "Add a new user", notes = "Sign in a new user",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User correctly registered"),
+            @ApiResponse(code = 400, message = "User data wrong or username already exists"),
+    })
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addUser(@Valid @RequestBody User user)
+    public ResponseEntity<?> addUser(@ApiParam(name = "User", value = "All the user data with an username and password to create an account",required = true) @Valid @RequestBody User user)
     {
         log.debug("Rest request to add a new user");
         try
@@ -220,8 +251,13 @@ public class UserController {
     *  Return a ResponseEntity with the id of the user deleted, or with the exception error
     *
     * */
+    @ApiOperation(value = "Delete an user" ,notes = "Delete an user with the user Id", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User correctly deleted"),
+            @ApiResponse(code = 400, message = "Error delete user, he has an active reservation "),
+    })
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteUser(@Valid @PathVariable("id") int id)
+    public ResponseEntity<?> deleteUser(@ApiParam(name = "id", value = "The id of the user to delete", required = true) @Valid @PathVariable("id") int id)
     {
         log.debug("Rest request to delete a user");
 
@@ -250,8 +286,14 @@ public class UserController {
     *
     *  Return a ResponseEntity with the updated user in the body, or with the exception error
     * */
+    @ApiOperation(value = "Update user",notes = "Update the user data", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User correctly updated"),
+            @ApiResponse(code = 400, message = "User data wrong"),
+            @ApiResponse(code = 400, message = "Username already exists"),
+    })
     @PutMapping(value = "/update",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateUser(@Valid @RequestBody User user)
+    public ResponseEntity<?> updateUser(@ApiParam(name = "user",value = "the user to update", required = true) @Valid @RequestBody User user)
     {
         log.debug("Rest request to update a user");
 
@@ -300,6 +342,11 @@ public class UserController {
 
     }
 
+    @ApiOperation(value = "Get user", notes = "get the user with the id",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User correctly registered"),
+            @ApiResponse(code = 400, message = "User data wrong or username already exists"),
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> userById(@PathVariable("id") int id)
     {

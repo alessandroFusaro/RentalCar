@@ -1,5 +1,8 @@
 package it.si2001.rentalcar.controller;
 
+import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import it.si2001.rentalcar.entities.Reservation;
 import it.si2001.rentalcar.entities.User;
 import it.si2001.rentalcar.entities.Vehicle;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -23,7 +27,7 @@ import java.util.List;
  * Rest controller for managing Reservation operations
  *
 */
-
+@OpenAPIDefinition(info = @Info(title = "Rest controller to managing the reservations operations"))
 @RestController
 @RequestMapping(value = "/reservation")
 public class ReservationController {
@@ -45,6 +49,11 @@ public class ReservationController {
     /*
      * return a ResponseEntity with a list of reservation in the body , or with the exception error
      */
+    @ApiOperation(value = "Reservation list",notes = "Get a list of reservation",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Reservation list"),
+            @ApiResponse(code = 400, message = "Error get list reservation"),
+    })
     @GetMapping("/list")
     public ResponseEntity<?> reservationList()
     {
@@ -72,8 +81,13 @@ public class ReservationController {
      *
      *  return a ResponseEntity with the data of the reservation in the body , or with the exception error
      */
+    @ApiOperation(value = "Reservation data",notes = "Get the data of the reservaion",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Reservation data"),
+            @ApiResponse(code = 400, message = "Error get reservation data"),
+    })
     @GetMapping("/data/{id}")
-    public ResponseEntity<?> reservationData(@Valid @PathVariable("id") int id)
+    public ResponseEntity<?> reservationData(@ApiParam(name = "id",value = "reservation id",required = true) @Valid @PathVariable("id") int id)
     {
         log.debug("Rest request to get the data of the reservation");
 
@@ -96,8 +110,13 @@ public class ReservationController {
      *
      *  return a ResponseEntity with a list of user Reservations in the body, or with the exception error
      */
+    @ApiOperation(value = "User reservations",notes = "List of the user reservations",response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of reservations"),
+            @ApiResponse(code = 400, message = "Error get list of reservations"),
+    })
     @GetMapping("/userReservation/{userId}")
-    public ResponseEntity<?> userReservations(@Valid @PathVariable("userId") int id)
+    public ResponseEntity<?> userReservations(@ApiParam(name = "id",value = "user id", required = true) @Valid @PathVariable("userId") int id)
     {
         log.debug("Rest request to get a list of the user reservations");
 
@@ -127,8 +146,13 @@ public class ReservationController {
      *
      *  return a ResponseEntity with the reservation approved in the body, or with the exception error
      * */
+    @ApiOperation(value = "Approve reservation",notes = "Approve reservation using the id", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Reservation correctly approved"),
+            @ApiResponse(code = 400, message = "Error approve reservation"),
+    })
     @PutMapping("/approve/{id}")
-    public ResponseEntity<?> approveReservation(@Valid @PathVariable("id") int id)
+    public ResponseEntity<?> approveReservation(@ApiParam(name = "id",value = "reservation id",required = true) @Valid @PathVariable("id") int id)
     {
         log.debug("Rest request to approve a reservation");
 
@@ -173,8 +197,13 @@ public class ReservationController {
      *
      *  return a ResponseEntity with the id of the reservation deleted in the body, or with the Exception error
      * */
+    @ApiOperation(value = "Delete reservation", notes = "Delete a reservation using the id", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Reservation correctly deleted"),
+            @ApiResponse(code = 400, message = "Error delete reservation"),
+    })
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteReservation(@PathVariable("id") int id)
+    public ResponseEntity<?> deleteReservation(@ApiParam(name = "id",value = "reservation id", required = true) @PathVariable("id") int id)
     {
         log.debug("Rest request to delete a reservation");
 
@@ -211,8 +240,13 @@ public class ReservationController {
      *
      *  return a ResponseEntity with the reservation updated in the body , or with the exception error
      * */
+    @ApiOperation(value = "Update reservation", notes = "update the reservation data", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Reservation correctly updated"),
+            @ApiResponse(code = 400, message = "Error update reservation"),
+    })
     @PutMapping(value = "/update",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> UpdateBooking(@Valid @RequestBody Reservation reservation)
+    public ResponseEntity<?> UpdateBooking(@ApiParam(name = "reservation",value = "reservation data",required = true) @Valid @RequestBody Reservation reservation)
     {
         log.debug("Rest request to update a reservation");
 
@@ -268,8 +302,13 @@ public class ReservationController {
      *
      *  return a ResponseEntity with the added reservation in the body, or with the exception error
      * */
+    @ApiOperation(value = "Add reservation",notes = "Add a new reservation", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Reservation correctly registered"),
+            @ApiResponse(code = 400, message = "Error add reservation"),
+    })
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> AddBooking(@Valid @RequestBody Reservation reservation)
+    public ResponseEntity<?> AddBooking(@ApiParam(name = "reservation",value = "reservation data", required = true) @Valid @RequestBody Reservation reservation)
     {
         log.debug("Rest request to add a reservation");
 
@@ -295,8 +334,13 @@ public class ReservationController {
         }
     }
 
+    @ApiOperation(value = "Is not active", notes = "Control if the reservation is active", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Reservation not active"),
+            @ApiResponse(code = 400, message = "Error controll reservation"),
+    })
     @GetMapping("/isNotActive/{id}")
-    public ResponseEntity<?> isActive(@PathVariable("id") int id)
+    public ResponseEntity<?> isActive(@ApiParam(name = "id", value = "reservation id", required = true) @PathVariable("id") int id)
     {
         //reservation is not active
         boolean result = true;
@@ -306,8 +350,13 @@ public class ReservationController {
         return ResponseEntity.ok().body(result);
     }
 
+    @ApiOperation(value = "Reservation by vehicle",notes = "get a list of reservation using the vehicle", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "List of reservation of th vehicle"),
+            @ApiResponse(code = 400, message = "Error get list"),
+    })
     @GetMapping("/listByVehicle/{plate}")
-    public ResponseEntity<?> reservationVehicle(@PathVariable("plate") String plate)
+    public ResponseEntity<?> reservationVehicle(@ApiParam(name = "plate",value = "vehicle plate", required = true) @PathVariable("plate") String plate)
     {
 
         List<Reservation> result;
