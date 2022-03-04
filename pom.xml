@@ -180,7 +180,41 @@
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.6.0</version>
             </plugin>
+
+            <plugin>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-webapp-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <configuration>
+                    <!-- ... -->
+                </configuration>
+            </plugin>
 		</plugins>
+	    <server>
+                <id>azure-auth</id>
+                <configuration>
+                    <client>4c723097-8aa8-4d72-bb4d-fdc73c1f0aaa</client>
+                    <tenant>24c5be2a-d764-40c5-9975-82d08ae47d0e</tenant>
+                    <environment>AZURE</environment>
+                </configuration>
+            </server>
+
+            <configuration>
+                <javaVersion>1.8</javaVersion>
+                <javaWebContainer>tomcat 8.5</javaWebContainer>
+                <!-- ... -->
+            </configuration>
+
+            <configuration>
+                <authentication>
+                    <serverId>azure-auth</serverId>
+                </authentication>
+                <appName>spring-azure</appName>
+                <resourceGroup>baeldung</resourceGroup>
+                <!-- ... -->
+            </configuration>
+
 	</build>
+
 
 </project>
