@@ -27,7 +27,7 @@ public class CfValidator implements ConstraintValidator<CodiceFiscale, String> {
         }else {
 
             message = validate(s);
-            constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate(message);
 
             return false;
         }
