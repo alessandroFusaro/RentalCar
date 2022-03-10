@@ -360,9 +360,4 @@ public class UserController {
         }
     }
 
-    @GetMapping("/prova")
-    public String prova(){
-        return "ciao";
-    }
-
 }
