@@ -43,7 +43,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
         }
-
+        //ktm
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             Account profilo = accountService.findAccountByUsername(username);
 
