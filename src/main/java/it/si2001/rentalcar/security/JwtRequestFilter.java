@@ -37,12 +37,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
 
+        //ciao
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
         {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
         }
-        
+
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             Account profilo = accountService.findAccountByUsername(username);
 
